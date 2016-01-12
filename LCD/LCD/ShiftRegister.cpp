@@ -1,6 +1,9 @@
 #include "ShiftRegister.h"
 
-ShiftRegister::ShiftRegister(volatile uint8_t *shiftClockPort, uint8_t shiftClockPin, volatile uint8_t *dataPort, uint8_t dataPin, volatile uint8_t *latchClockPort, uint8_t latchClockPin) : m_shiftClockPin(shiftClockPort, shiftClockPin)
+ShiftRegister::ShiftRegister(volatile uint8_t *shiftClockPort, uint8_t shiftClockPin,
+                             volatile uint8_t *dataPort, uint8_t dataPin,
+                             volatile uint8_t *latchClockPort, uint8_t latchClockPin)
+	: m_shiftClockPin(shiftClockPort, shiftClockPin)
 	, m_dataPin(dataPort, dataPin)
 	, m_latchClockPin(latchClockPort, latchClockPin)
 {

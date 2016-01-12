@@ -1,6 +1,7 @@
 #include "Pin.h"
 
-Pin::Pin(volatile uint8_t *port, uint8_t pin) : m_port(port)
+Pin::Pin(volatile uint8_t *port, uint8_t pin)
+	: m_port(port)
 	, m_pin(pin)
 {
 
