@@ -15,7 +15,7 @@ int main(void)
 	Pin ledPin(&PORTA, PA0);
 
 	// lcd initialization goes here
-
+	LCD lcd(shiftRegister);
 
 	while(1)
 	{

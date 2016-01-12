@@ -17,3 +17,22 @@ public:
 
 	void output(int8_t value);
 };
+
+class LCD
+{
+private:
+	ShiftRegister &m_shiftRegister;
+
+public:
+	LCD(ShiftRegister &shiftRegister)
+		: m_shiftRegister(shiftRegister)
+	{
+
+	}
+
+private:
+	void init()
+	{
+
+	}
+};
