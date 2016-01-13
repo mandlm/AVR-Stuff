@@ -6,6 +6,7 @@
 
 #include "Pin.h"
 #include "ShiftRegister.h"
+#include "KS0066.h"
 
 int main(void)
 {
@@ -15,7 +16,7 @@ int main(void)
 	Pin ledPin(&PORTA, PA0);
 
 	// lcd initialization goes here
-	LCD lcd(shiftRegister);
+	KS0066 lcd(shiftRegister);
 
 	while(1)
 	{
