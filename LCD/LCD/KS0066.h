@@ -1,5 +1,7 @@
 #pragma once
 
+#include "environment.h"
+
 #include <avr/io.h>
 
 #include "ShiftRegister.h"
@@ -7,7 +9,7 @@
 class KS0066
 {
 private:
-	ShiftRegister &m_shiftRegister;
+	ShiftRegister *m_shiftRegister;
 
 	static const uint8_t m_rs = 0;
 	static const uint8_t m_rw = 1;
@@ -16,6 +18,9 @@ private:
 	static const uint8_t m_db5 = 4;
 	static const uint8_t m_db6 = 5;
 	static const uint8_t m_db7 = 6;
+
+	uint8_t m_lines = 2;
+	uint8_t m_columns = 16;
 
 public:
 	KS0066(ShiftRegister &shiftRegister);
@@ -28,8 +33,12 @@ private:
 	void displayClear();
 	void entryMode(bool incrementMode, bool entireShift);
 
+	void setCursorPos(uint8_t line, uint8_t column);
+
 	void sendCommand(uint8_t data);
+
 	void sendChar(char c);
+	void sendString(const char *string);
 
 	void sendByte(uint8_t data, bool isCommand);
 

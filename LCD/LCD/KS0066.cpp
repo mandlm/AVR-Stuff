@@ -2,7 +2,8 @@
 
 #include <util/delay.h>
 
-KS0066::KS0066(ShiftRegister &shiftRegister) : m_shiftRegister(shiftRegister)
+KS0066::KS0066(ShiftRegister &shiftRegister)
+	: m_shiftRegister(&shiftRegister)
 {
 	initDisplay();
 }
@@ -11,18 +12,24 @@ void KS0066::initDisplay()
 {
 	_delay_ms(30);
 
-	functionSet(false, false, true);
-	onOffControl(true, true, true);
+	execute((1 << m_db5) | 1 << m_db4);
+	_delay_ms(5);
+	execute((1 << m_db5) | 1 << m_db4);
+	_delay_us(100);
+	execute((1 << m_db5) | 1 << m_db4);
+	execute((1 << m_db5));
+
+	functionSet(false, true, true);
+
+	onOffControl(true, false, false);
 	displayClear();
+
 	entryMode(true, false);
 
-	sendChar('i');
-	sendChar('n');
-	sendChar('i');
-	sendChar('t');
+	sendString("ready.");
 }
 
-void KS0066::functionSet(bool interface8bit, bool twoLine, bool displayOn)
+void KS0066::functionSet(bool interface8bit, bool twoLine, bool displayFont)
 {
 	uint8_t command = 0b00100000;
 
@@ -36,14 +43,14 @@ void KS0066::functionSet(bool interface8bit, bool twoLine, bool displayOn)
 		command |= (1 << 3);
 	}
 
-	if (displayOn)
+	if (displayFont)
 	{
 		command |= (1 << 2);
 	}
 
 	sendCommand(command);
 
-	_delay_us(39);
+	_delay_us(53);
 }
 
 void KS0066::onOffControl(bool displayOn, bool cursorOn, bool blinkingOn)
@@ -67,7 +74,7 @@ void KS0066::onOffControl(bool displayOn, bool cursorOn, bool blinkingOn)
 
 	sendCommand(command);
 
-	_delay_us(39);
+	_delay_us(53);
 }
 
 void KS0066::displayClear()
@@ -76,7 +83,7 @@ void KS0066::displayClear()
 
 	sendCommand(command);
 
-	_delay_ms(1.53);
+	_delay_ms(2.16);
 }
 
 void KS0066::entryMode(bool incrementMode, bool entireShift)
@@ -95,7 +102,12 @@ void KS0066::entryMode(bool incrementMode, bool entireShift)
 
 	sendCommand(command);
 
-	_delay_us(39);
+	_delay_us(53);
+}
+
+void KS0066::setCursorPos(uint8_t line, uint8_t column)
+{
+	sendCommand(0b10000000 + column + (line * 40));
 }
 
 void KS0066::sendCommand(uint8_t data)
@@ -107,7 +119,22 @@ void KS0066::sendChar(char c)
 {
 	sendByte(c, false);
 
-	_delay_us(43);
+	_delay_us(53);
+}
+
+void KS0066::sendString(const char *string)
+{
+	uint8_t count = 0;
+	while (string != nullptr && *string != 0 && count < (m_lines * m_columns))
+	{
+		if (count % m_columns == 0)
+		{
+			setCursorPos(count / m_columns, 0);
+		}
+		sendChar(*string);
+		string++;
+		count++;
+	}
 }
 
 void KS0066::sendByte(uint8_t data, bool isCommand)
@@ -148,7 +175,7 @@ void KS0066::sendByte(uint8_t data, bool isCommand)
 		registerValue |= (1 << m_db7);
 	}
 
-	if (data & (1 << 3))
+	if (data & (1 << 2))
 	{
 		registerValue |= (1 << m_db6);
 	}
@@ -169,11 +196,10 @@ void KS0066::sendByte(uint8_t data, bool isCommand)
 void KS0066::execute(uint8_t registerValue)
 {
 	registerValue |= (1 << m_e);
-	m_shiftRegister.output(registerValue);
-
+	m_shiftRegister->output(registerValue);
 	_delay_us(2);
 
 	registerValue &= ~(1 << m_e);
-	m_shiftRegister.output(registerValue);
+	m_shiftRegister->output(registerValue);
 }
 
