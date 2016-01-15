@@ -1,5 +1,4 @@
-
-#define F_CPU 4336180
+#include "environment.h"
 
 #include <avr/io.h>
 #include <util/delay.h>
