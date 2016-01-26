@@ -76,7 +76,7 @@ int main(void)
 	I2C_init(0x23);
 	sei();
 
-	while(1)
+	while(true)
 	{
 		if (writeDisplay == true)
 		{
