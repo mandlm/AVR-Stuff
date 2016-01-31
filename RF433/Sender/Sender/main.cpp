@@ -1,18 +1,19 @@
-/*
- * Sender.cpp
- *
- * Created: 31.01.2016 14:09:45
- * Author : mandlm
- */ 
+#define F_CPU 9600000 / 8
 
 #include <avr/io.h>
+#include <util/delay.h>
 
-
-int main(void)
+int main()
 {
-    /* Replace with your application code */
-    while (1) 
-    {
-    }
-}
+	DDRB |= (1 << PB4) | (1 << PB3);
 
+	while (true)
+	{
+		PORTB |= (1 << PB3);
+		PORTB |= (1 << PB4);
+		_delay_ms(500);
+		PORTB &= ~(1 << PB3);
+		PORTB &= ~(1 << PB4);
+		_delay_ms(500);
+	}
+}
