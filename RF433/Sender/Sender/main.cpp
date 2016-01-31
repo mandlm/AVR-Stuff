@@ -11,9 +11,9 @@ int main()
 	{
 		PORTB |= (1 << PB3);
 		PORTB |= (1 << PB4);
-		_delay_ms(500);
+		_delay_ms(250);
 		PORTB &= ~(1 << PB3);
 		PORTB &= ~(1 << PB4);
-		_delay_ms(500);
+		_delay_ms(250);
 	}
 }
