@@ -8,7 +8,6 @@
 
 #include "ShiftRegister.h"
 #include "KS0066.h"
-#include "Pin.h"
 
 volatile bool measuring = false;
 volatile int16_t dist = 0.0;
@@ -84,4 +83,3 @@ int main(void)
 		_delay_ms(250);
 	}
 }
-
